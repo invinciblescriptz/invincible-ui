@@ -4,94 +4,33 @@ local a = {
     toggle_key = Enum.KeyCode.RightShift,
     can_resize = true
 }
-do
-    local b = game:GetService("CoreGui"):FindFirstChild("imgui")
-    if b then b:Destroy() end
+
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local guiName = "imgui"
+
+-- Destroy existing GUI if present
+local existingGui = CoreGui:FindFirstChild(guiName)
+if existingGui then
+    existingGui:Destroy()
 end
 
+-- Create new ScreenGui
 local b = Instance.new("ScreenGui")
+b.Name = guiName
+b.Parent = CoreGui
+b.Enabled = false -- start hidden
+
+-- Create main Frame (your GUI container)
 local c = Instance.new("Frame")
-local d = Instance.new("TextLabel")
-local e = Instance.new("ImageLabel")
-local f = Instance.new("Frame")
-local g = Instance.new("Frame")
-local h = Instance.new("ImageButton")
-local i = Instance.new("ImageLabel")
-local j = Instance.new("ImageLabel")
-local k = Instance.new("Frame")
-local l = Instance.new("TextLabel")
-local m = Instance.new("ImageLabel")
-local n = Instance.new("ScrollingFrame")
-local o = Instance.new("Frame")
-local p = Instance.new("UIListLayout")
-local q = Instance.new("Frame")
-local r = Instance.new("Frame")
-local s = Instance.new("UIListLayout")
-local t = Instance.new("TextBox")
-local u = Instance.new("ImageLabel")
-local v = Instance.new("ImageLabel")
-local w = Instance.new("TextLabel")
-local x = Instance.new("ImageLabel")
-local y = Instance.new("TextLabel")
-local z = Instance.new("TextLabel")
-local A = Instance.new("TextLabel")
-local B = Instance.new("ImageLabel")
-local C = Instance.new("UIListLayout")
-local D = Instance.new("TextButton")
-local E = Instance.new("ImageLabel")
-local F = Instance.new("ImageButton")
-local G = Instance.new("ScrollingFrame")
-local H = Instance.new("UIListLayout")
-local I = Instance.new("ImageLabel")
-local J = Instance.new("TextButton")
-local K = Instance.new("ImageLabel")
-local L = Instance.new("ImageLabel")
-local M = Instance.new("TextButton")
-local N = Instance.new("ImageLabel")
-local O = Instance.new("ImageLabel")
-local P = Instance.new("Frame")
-local Q = Instance.new("UIListLayout")
-local R = Instance.new("Frame")
-local S = Instance.new("UIListLayout")
-local T = Instance.new("ImageLabel")
-local U = Instance.new("ScrollingFrame")
-local V = Instance.new("TextBox")
-local W = Instance.new("TextLabel")
-local X = Instance.new("TextLabel")
-local Y = Instance.new("TextLabel")
-local Z = Instance.new("TextLabel")
-local _ = Instance.new("TextLabel")
-local a0 = Instance.new("TextLabel")
-local a1 = Instance.new("TextLabel")
-local a2 = Instance.new("TextLabel")
-local a3 = Instance.new("TextLabel")
-local a4 = Instance.new("ImageLabel")
-local a5 = Instance.new("ImageLabel")
-local a6 = Instance.new("ImageLabel")
-local a7 = Instance.new("ImageLabel")
-local a8 = Instance.new("ImageLabel")
-local a9 = Instance.new("Frame")
-local aa = Instance.new("TextButton")
-local ab = Instance.new("ImageLabel")
-local ac = Instance.new("TextLabel")
-local ad = Instance.new("TextButton")
-local ae = Instance.new("ImageLabel")
-local af = Instance.new("TextButton")
-local ag = Instance.new("ImageLabel")
-local ah = Instance.new("TextLabel")
-local ai = Instance.new("TextButton")
-local aj = Instance.new("ImageLabel")
-local ak = Instance.new("Frame")
-
-b.Name = "imgui"
-b.Parent = game:GetService("CoreGui") or gethui()
-
 c.Name = "Prefabs"
 c.Parent = b
 c.BackgroundColor3 = Color3.new(1, 1, 1)
 c.Size = UDim2.new(0, 100, 0, 100)
-c.Visible = false
+c.Visible = false -- start hidden
 
+-- Create a label
+local d = Instance.new("TextLabel")
 d.Name = "Label"
 d.Parent = c
 d.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -103,6 +42,8 @@ d.TextColor3 = Color3.new(1, 1, 1)
 d.TextSize = 16
 d.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Create your main window
+local e = Instance.new("ImageLabel")
 e.Name = "Window"
 e.Parent = c
 e.Active = true
@@ -117,6 +58,8 @@ e.ImageColor3 = Color3.new(0.0823529, 0.0862745, 0.0901961)
 e.ScaleType = Enum.ScaleType.Slice
 e.SliceCenter = Rect.new(12, 12, 12, 12)
 
+-- Resizer frame
+local f = Instance.new("Frame")
 f.Name = "Resizer"
 f.Parent = e
 f.Active = true
@@ -126,6 +69,8 @@ f.BorderSizePixel = 0
 f.Position = UDim2.new(1, -20, 1, -20)
 f.Size = UDim2.new(0, 20, 0, 20)
 
+-- Bar at the top
+local g = Instance.new("Frame")
 g.Name = "Bar"
 g.Parent = e
 g.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
@@ -133,28 +78,32 @@ g.BorderSizePixel = 0
 g.Position = UDim2.new(0, 0, 0, 5)
 g.Size = UDim2.new(1, 0, 0, 15)
 
+-- Toggle button image
+local h = Instance.new("ImageButton")
 h.Name = "Toggle"
 h.Parent = g
 h.BackgroundColor3 = Color3.new(1, 1, 1)
 h.BackgroundTransparency = 1
 h.Position = UDim2.new(0, 5, 0, -2)
-h.Rotation = 0
 h.Size = UDim2.new(0, 20, 0, 20)
 h.ZIndex = 2
 h.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=98003173280742"
 
+-- Base image
+local i = Instance.new("ImageLabel")
 i.Name = "Base"
 i.Parent = g
 i.BackgroundColor3 = Color3.new(0.160784, 0.290196, 0.478431)
 i.BorderSizePixel = 0
-i.Position = UDim2.new(0, 0, 0.800000012, 0)
+i.Position = UDim2.new(0, 0, 0.8, 0)
 i.Size = UDim2.new(1, 0, 0, 10)
--- Corrected image URL
 i.Image = "https://www.roblox.com/asset/?id=87818427487763"
 i.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
 i.ScaleType = Enum.ScaleType.Slice
 i.SliceCenter = Rect.new(12, 12, 12, 12)
 
+-- Top image
+local j = Instance.new("ImageLabel")
 j.Name = "Top"
 j.Parent = g
 j.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -166,14 +115,8 @@ j.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
 j.ScaleType = Enum.ScaleType.Slice
 j.SliceCenter = Rect.new(12, 12, 12, 12)
 
-k.Name = "Tabs"
-k.Parent = e
-k.BackgroundColor3 = Color3.new(1, 1, 1)
-k.BackgroundTransparency = 1
-k.Position = UDim2.new(0, 15, 0, 60)
-k.Size = UDim2.new(1, -30, 1, -60)
-k.ClipsDescendants = true
-
+-- Title
+local l = Instance.new("TextLabel")
 l.Name = "Title"
 l.Parent = e
 l.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -186,6 +129,8 @@ l.TextColor3 = Color3.new(1, 1, 1)
 l.TextSize = 16
 l.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Tab section
+local m = Instance.new("ImageLabel")
 m.Name = "TabSelection"
 m.Parent = e
 m.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -198,6 +143,8 @@ m.ImageColor3 = Color3.new(0.145098, 0.14902, 0.156863)
 m.ScaleType = Enum.ScaleType.Slice
 m.SliceCenter = Rect.new(4, 4, 4, 4)
 
+-- TabScrolling
+local n = Instance.new("ScrollingFrame")
 n.Name = "TabScrolling"
 n.Parent = m
 n.BackgroundTransparency = 1
@@ -207,6 +154,8 @@ n.CanvasSize = UDim2.new(0, 0, 1, 0)
 n.ScrollBarThickness = 0
 n.ScrollingDirection = Enum.ScrollingDirection.X
 
+-- Tab buttons container
+local o = Instance.new("Frame")
 o.Name = "TabButtons"
 o.Parent = n
 o.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -214,11 +163,14 @@ o.BackgroundTransparency = 1
 o.Size = UDim2.new(0, 0, 1, 0)
 o.ClipsDescendants = true
 
+local p = Instance.new("UIListLayout")
 p.Parent = o
 p.FillDirection = Enum.FillDirection.Horizontal
 p.SortOrder = Enum.SortOrder.LayoutOrder
 p.Padding = UDim.new(0, 2)
 
+-- Separator line
+local q = Instance.new("Frame")
 q.Parent = m
 q.BackgroundColor3 = Color3.new(0.12549, 0.227451, 0.372549)
 q.BorderColor3 = Color3.new(0.105882, 0.164706, 0.207843)
@@ -226,40 +178,20 @@ q.BorderSizePixel = 0
 q.Position = UDim2.new(0, 0, 1, 0)
 q.Size = UDim2.new(1, 0, 0, 2)
 
-r.Name = "Tab"
-r.Parent = c
-r.BackgroundColor3 = Color3.new(1, 1, 1)
-r.BackgroundTransparency = 1
-r.Size = UDim2.new(1, 0, 1, 0)
-r.Visible = false
+-- Main toggle script
+local function toggleGui()
+    b.Enabled = not b.Enabled
+    c.Visible = b.Enabled
+end
 
-s.Parent = r
-s.SortOrder = Enum.SortOrder.LayoutOrder
-s.Padding = UDim.new(0, 5)
+-- Set initial state
+b.Enabled = false
+c.Visible = false
 
-t.Parent = c
-t.BackgroundColor3 = Color3.new(1, 1, 1)
-t.BackgroundTransparency = 1
-t.BorderSizePixel = 0
-t.Size = UDim2.new(1, 0, 0, 20)
-t.ZIndex = 2
-t.Font = Enum.Font.FredokaOne
-t.PlaceholderText = "Input Text"
-t.Text = ""
-t.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
-t.TextSize = 14
-t.TextXAlignment = Enum.TextXAlignment.Left
-
--- Updated image URL for the ImageLabel 'i'
-i.Name = "TextBox_Roundify_4px"
-i.Parent = t
-i.BackgroundColor3 = Color3.new(1, 1, 1)
-i.BackgroundTransparency = 1
-i.Size = UDim2.new(1, 0, 1, 0)
-i.Image = "rbxassetid://2851929490" -- Keep original or change as needed
-i.ImageColor3 = Color3.new(0.203922, 0.207843, 0.219608)
-i.ScaleType = Enum.ScaleType.Slice
-i.SliceCenter = Rect.new(4, 4, 4, 4)
-
--- Fix for the specific line
-i.Image = "https://www.roblox.com/asset/?id=87818427487763"
+-- Connect toggle to key press
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == a.toggle_key then
+        toggleGui()
+    end
+end)
