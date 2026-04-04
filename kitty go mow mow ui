@@ -220,7 +220,7 @@ uiListLayout.FillDirection = Enum.FillDirection.Horizontal
 uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 uiListLayout.Padding = UDim.new(0, 2)
 
--- Main tab frame
+-- Main tab frame (hidden)
 frame.Parent = tabSelection
 frame.BackgroundColor3 = Color3.new(0.12549, 0.227451, 0.372549)
 frame.BorderColor3 = Color3.new(0.105882, 0.164706, 0.207843)
@@ -422,7 +422,7 @@ tabButton.Text = "Test tab"
 tabButton.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
 tabButton.TextSize = 14
 
--- Text button style
+-- Text style for tab button
 textButtonRoundify4px_2.Name = "TextButton_Roundify_4px"
 textButtonRoundify4px_2.Parent = tabButton
 textButtonRoundify4px_2.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -546,7 +546,7 @@ source.TextWrapped = true
 source.TextXAlignment = Enum.TextXAlignment.Left
 source.TextYAlignment = Enum.TextYAlignment.Top
 
--- Additional labels inside source (syntax highlighting etc.)
+-- Additional labels for syntax highlighting and info
 commentsLabel.Name = "Comments"
 commentsLabel.Parent = source
 commentsLabel.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -665,7 +665,7 @@ linesLabel.TextSize = 15
 linesLabel.TextWrapped = true
 linesLabel.TextYAlignment = Enum.TextYAlignment.Top
 
--- Color Picker
+-- Color Picker Elements
 colorPicker.Name = "ColorPicker"
 colorPicker.Parent = prefabs
 colorPicker.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -779,18 +779,18 @@ textButtonRoundify4px_5.ImageColor3 = Color3.new(0.160784, 0.290196, 0.478431)
 textButtonRoundify4px_5.ScaleType = Enum.ScaleType.Slice
 textButtonRoundify4px_5.SliceCenter = Rect.new(4, 4, 4, 4)
 
--- DropdownButton
-dropdownButton.Name = "DropdownButton"
-dropdownButton.Parent = prefabs
-dropdownButton.BackgroundColor3 = Color3.new(0.129412, 0.133333, 0.141176)
-dropdownButton.BorderSizePixel = 0
-dropdownButton.Size = UDim2.new(1, 0, 0, 20)
-dropdownButton.ZIndex = 3
-dropdownButton.Font = Enum.Font.GothamBold
-dropdownButton.Text = "      Button"
-dropdownButton.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
-dropdownButton.TextSize = 14
-dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+-- Dropdown Button
+dropdown.Name = "DropdownButton"
+dropdown.Parent = prefabs
+dropdown.BackgroundColor3 = Color3.new(0.129412, 0.133333, 0.141176)
+dropdown.BorderSizePixel = 0
+dropdown.Size = UDim2.new(1, 0, 0, 20)
+dropdown.ZIndex = 3
+dropdown.Font = Enum.Font.GothamBold
+dropdown.Text = "      Button"
+dropdown.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+dropdown.TextSize = 14
+dropdown.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Keybind style
 keybind.Name = "Keybind"
@@ -849,7 +849,15 @@ windowsFrame.BackgroundTransparency = 1
 windowsFrame.Position = UDim2.new(0, 20, 0, 20)
 windowsFrame.Size = UDim2.new(1, 20, 1, -20)
 
--- Now, the critical part: the toggle open/close logic with proper image change
+-- Store original height for toggle
+local oldHeight = 0 -- will be set after window creation
+
+-- Function to initialize window height after creation
+local function initWindowHeight()
+    oldHeight = window.Size.Y.Offset
+end
+
+-- Now, the critical toggle logic with image update
 local root = imgui
 
 local UIS = game:GetService("UserInputService")
@@ -999,6 +1007,11 @@ function library:AddWindow(title, options)
     Window.Size = UDim2.new(0, options.min_size.X, 0, options.min_size.Y)
     Window.ZIndex = Window.ZIndex + (windows * 10)
 
+    -- Set initial height for toggle
+    if oldHeight == 0 then
+        oldHeight = Window.Size.Y.Offset
+    end
+
     do -- Altering Window Color
         local Bar = Window:FindFirstChild("Bar")
         local Base = Bar:FindFirstChild("Base")
@@ -1070,13 +1083,12 @@ function library:AddWindow(title, options)
         end)
     end
 
-    -- Open/Close toggle logic with image update
+    -- Toggle open/close with image update
     local toggleBtn = Window:FindFirstChild("Bar"):FindFirstChild("Toggle")
     local open = true
     local canToggle = true
     local toggleImageId = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=100812123661979"
-    local oldHeight = Window.Size.Y.Offset
-
+    
     toggleBtn.MouseButton1Click:Connect(function()
         if not canToggle then return end
         canToggle = false
@@ -1088,8 +1100,8 @@ function library:AddWindow(title, options)
             end
             Resizer.Active = false
             Resize(Window, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 26)}, options.tween_time)
-            if toggleBtn then
-                toggleBtn.Image = toggleImageId -- set to your asset ID for closed
+            if toggle then
+                toggle.Image = toggleImageId -- set to your asset ID for closed
             end
         else
             -- Open window
@@ -1098,8 +1110,8 @@ function library:AddWindow(title, options)
             end
             Resizer.Active = true
             Resize(Window, {Size = UDim2.new(0, Window.Size.X.Offset, 0, oldHeight)}, options.tween_time)
-            if toggleBtn then
-                toggleBtn.Image = toggleImageId -- set to your asset ID for open
+            if toggle then
+                toggle.Image = toggleImageId -- set to your asset ID for open
             end
         end
 
@@ -1109,14 +1121,11 @@ function library:AddWindow(title, options)
     end)
 
     -- Rest of your window code (adding tabs etc.) remains unchanged
-    -- ...
-    -- (You can append the rest of your code here, which I omit for brevity)
-    
+    -- You can append the rest of your code here, which I omit for brevity
+
     -- Return your window data and window object if needed
     return window_data, Window
 end
 
--- Finally, return the library
-return {
-    -- your functions here
-}
+-- return the library if needed
+return {}
